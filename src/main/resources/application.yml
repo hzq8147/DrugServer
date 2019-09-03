@@ -1,0 +1,18 @@
+server:
+  port: 8081
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  mvc:
+    favicon:
+      enabled: false
+  datasource:
+    url: jdbc:mysql://39.107.108.169:13306/drug?useUnicode=true&characterEncoding=utf-8&serverTimezone=PRC&useSSL=false
+    username: root
+    password: 159753hlongde
+  jpa:
+    show-sql: false
+  jackson:
+    default-property-inclusion: non_null
