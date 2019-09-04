@@ -21,7 +21,12 @@ public class ApiController {
     }
 
     @GetMapping("/drugs")
-    public List<DrugEntity> getDrugs(@Param("name") String name) {
-        return apiService.getDrugs(name);
+    public List<DrugEntity> searchDrugs(@Param("name") String name) {
+        if (name==null) {
+            return apiService.getAllDrugs();
+        }else{
+            return apiService.getDrugs(name);
+        }
     }
 }
+
