@@ -4,7 +4,7 @@ public class ResponseMessage {
     /*
         是否成功
      */
-    private boolean success;
+    private int code;
 
     /*
         返回信息
@@ -16,17 +16,18 @@ public class ResponseMessage {
     */
     private Object data;
 
-    public ResponseMessage(boolean success,String msg,Object data){
-        this.success=success;
+    public ResponseMessage(int code,String msg,Object data){
+        this.code=code;
         this.msg=msg;
         this.data=data;
     }
-    public boolean isSuccess() {
-        return success;
+
+    public int getCode() {
+        return code;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getMsg() {
