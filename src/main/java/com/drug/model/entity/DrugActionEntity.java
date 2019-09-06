@@ -1,6 +1,7 @@
 package com.drug.model.entity;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -11,8 +12,8 @@ public class DrugActionEntity {
     private long drugId;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private int changeNum;
     private long userId;
+    private BigDecimal changeNum;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,16 +73,6 @@ public class DrugActionEntity {
     }
 
     @Basic
-    @Column(name = "change_num", nullable = false, precision = 0)
-    public int getChangeNum() {
-        return changeNum;
-    }
-
-    public void setChangeNum(int changeNum) {
-        this.changeNum = changeNum;
-    }
-
-    @Basic
     @Column(name = "user_id", nullable = false)
     public long getUserId() {
         return userId;
@@ -89,5 +80,15 @@ public class DrugActionEntity {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    @Basic
+    @Column(name = "change_num", nullable = false, precision = 2)
+    public BigDecimal getChangeNum() {
+        return changeNum;
+    }
+
+    public void setChangeNum(BigDecimal changeNum) {
+        this.changeNum = changeNum;
     }
 }

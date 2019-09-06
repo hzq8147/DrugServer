@@ -1,6 +1,6 @@
 package com.drug.controller;
 
-import com.drug.model.entity.ResponseMessage;
+import com.drug.model.response.ResponseMessage;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

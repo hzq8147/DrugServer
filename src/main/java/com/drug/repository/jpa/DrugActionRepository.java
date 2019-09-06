@@ -15,6 +15,7 @@ public interface DrugActionRepository extends JpaRepository<DrugActionEntity, Lo
     Optional<List<DrugActionEntity>> getById(Long id);
     Optional<List<DrugActionEntity>> getByDrugId(Long id);
     Optional<List<DrugActionEntity>> getByUserId(Long id);
+    DrugActionEntity save(DrugActionEntity drugAction);
 
 
     @Query("from DrugActionEntity")

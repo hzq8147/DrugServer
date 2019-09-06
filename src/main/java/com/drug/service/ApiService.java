@@ -12,12 +12,17 @@ public interface ApiService {
    List<DrugEntity> getDrugsByName(String name);
    List<DrugEntity> getDrugsById(Long id);
 
-   List<DrugEntity> getAllDrugs();
+   DrugEntity insertDrug(DrugEntity drug);
+   DrugEntity updateDrug(DrugEntity drug);
+   DrugEntity deleteDrug(Long id);
 
+   List<DrugEntity> getAllDrugs();
    //行为信息
    List<DrugActionEntity> getActionById(Long id);
    List<DrugActionEntity> getActionByUserId(Long id);
    List<DrugActionEntity> getActionByDrugId(Long id);
+
+   DrugActionEntity insertDrugAction(DrugActionEntity drugAction);
 
    List<DrugActionEntity> getAllActions();
 
