@@ -1,6 +1,10 @@
 package com.drug.model.entity;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -9,19 +13,27 @@ import java.util.Objects;
 @Table(name = "drug", schema = "drug", catalog = "")
 public class DrugEntity {
     private long id;
+    @NotNull(message = "姓名不能为空")
+    @Length(max = 255,message = "姓名过长")
     private String name;
+    @NotNull(message = "数量不能为空")
     private BigDecimal quantity;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private Long rid;
+    @NotNull(message = "日常储量不能空")
     private BigDecimal reserves;
+
+    @NotNull(message = "存储单位不能为空")
     private String reservesUnit;
+    @NotNull(message = "主要安全风险不能为空")
     private String securityRisk;
     private String securityRiskRate;
     private String danger;
     private BigDecimal reservesMin;
     private String remark;
     private String management;
+    @NotNull(message = "存储教室不能为空")
     private int placeRoom;
 
     @Id

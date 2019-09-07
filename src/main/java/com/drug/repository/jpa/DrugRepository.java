@@ -11,10 +11,10 @@ import java.util.Optional;
 @Repository
 public interface DrugRepository extends JpaRepository<DrugEntity, Long> {
     //药物信息查询
-    Optional<List<DrugEntity>> getByNameStartingWith(String name);
-    Optional<List<DrugEntity>> getById(Long id);
-
-
+    List<DrugEntity> getByNameStartingWith(String name);
+    Optional<DrugEntity> getById(Long id);
+    DrugEntity save(DrugEntity drug);
+    void deleteById(Long id);
 
     @Query("from DrugEntity")
     List<DrugEntity> getAll();

@@ -1,6 +1,8 @@
 package com.drug.model.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -8,11 +10,14 @@ import java.util.Objects;
 @Table(name = "drug_action", schema = "drug", catalog = "")
 public class DrugActionEntity {
     private long id;
+    @NotNull(message = "drugId不能为空")
     private long drugId;
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    private int changeNum;
+    @NotNull(message = "userId不能为空")
     private long userId;
+    @NotNull(message = "数值修改不能为空")
+    private BigDecimal changeNum;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,16 +77,6 @@ public class DrugActionEntity {
     }
 
     @Basic
-    @Column(name = "change_num", nullable = false, precision = 0)
-    public int getChangeNum() {
-        return changeNum;
-    }
-
-    public void setChangeNum(int changeNum) {
-        this.changeNum = changeNum;
-    }
-
-    @Basic
     @Column(name = "user_id", nullable = false)
     public long getUserId() {
         return userId;
@@ -89,5 +84,15 @@ public class DrugActionEntity {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    @Basic
+    @Column(name = "change_num", nullable = false, precision = 2)
+    public BigDecimal getChangeNum() {
+        return changeNum;
+    }
+
+    public void setChangeNum(BigDecimal changeNum) {
+        this.changeNum = changeNum;
     }
 }

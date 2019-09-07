@@ -5,9 +5,11 @@ import com.drug.model.entity.DrugEntity;
 import com.drug.repository.jpa.DrugActionRepository;
 import com.drug.repository.jpa.DrugRepository;
 import com.drug.service.ApiService;
+import com.drug.utils.TimeUtils;
+import com.mysql.cj.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,63 +28,132 @@ public class ApiServiceImpl implements ApiService {
     //药品信息
     @Override
     public List<DrugEntity> getDrugsByName(String name) {
-            Optional<List<DrugEntity>> drugEntities = drugRepository.getByNameStartingWith(name);
-            if (!drugEntities.isPresent()){
-                throw new RuntimeException("No Data");
-            }
-            return drugEntities.get();
+            List<DrugEntity> drugEntities = drugRepository.getByNameStartingWith(name);
+            return drugEntities;
     }
 
     @Override
-    public List<DrugEntity> getDrugsById(Long id){
-        Optional<List<DrugEntity>> drugEntities=drugRepository.getById(id);
+    public DrugEntity getDrugById(Long id){
+        Optional<DrugEntity> drugEntities=drugRepository.getById(id);
         if (!drugEntities.isPresent()){
-            throw new RuntimeException("No Data");
+            return null;
         }
         return drugEntities.get();
 
     }
-
+    //插入信息
+    @Override
+    public  DrugEntity insertDrug(DrugEntity drug){
+        drug.setCreatedAt(TimeUtils.getNowTime());
+        drug.setUpdatedAt(TimeUtils.getNowTime());
+        return drugRepository.save(drug);
+    }
+    @Override
+    public DrugEntity updateDrug(DrugEntity drug){
+        Optional<DrugEntity>drugOpt= drugRepository.getById(drug.getId());
+        if (!drugOpt.isPresent()){
+            return null;
+        }
+        DrugEntity drugRepo=drugOpt.get();
+        drugRepo.setUpdatedAt(TimeUtils.getNowTime());
+        if(drug.getName()!=null){
+            drugRepo.setName(drug.getName());
+        }
+        if(drug.getQuantity()!=null){
+            drugRepo.setQuantity(drug.getQuantity());
+        }
+        if (drug.getRid()!=null){
+            drugRepo.setRid(drug.getRid());
+        }
+        if (drug.getReserves()!=null){
+            drugRepo.setReserves(drug.getReserves());
+        }
+        if (drug.getReservesUnit()!=null){
+            drugRepo.setReservesUnit(drug.getReservesUnit());
+        }
+        if (drug.getSecurityRisk()!=null){
+            drugRepo.setSecurityRisk(drug.getSecurityRisk());
+        }
+        if (drug.getSecurityRiskRate()!=null){
+            drugRepo.setSecurityRiskRate(drug.getSecurityRiskRate());
+        }
+        if (drug.getDanger()!=null){
+            drugRepo.setDanger(drug.getDanger());
+        }
+        if (drug.getReservesMin()!=null){
+            drugRepo.setReservesMin(drug.getReservesMin());
+        }
+        if (drug.getRemark()!=null){
+            drugRepo.setRemark(drug.getRemark());
+        }
+        if (drug.getManagement()!=null){
+            drugRepo.setManagement(drug.getManagement());
+        }
+        if (drug.getPlaceRoom()>0){
+            drugRepo.setPlaceRoom(drug.getPlaceRoom());
+        }
+        return drugRepository.save(drugRepo);
+    }
+    @Override
+    public DrugEntity deleteDrug(Long id){
+        Optional<DrugEntity> drugRepo= drugRepository.getById(id);
+        if (!drugRepo.isPresent()){
+            return null;
+        }
+        drugRepository.deleteById(id);
+        return  drugRepo.get();
+    }
     //获取所有药品
     @Override
     public List<DrugEntity> getAllDrugs() {
-        List<DrugEntity> drugEntities = drugRepository.getAll();
-        return drugEntities;
+        return drugRepository.getAll();
     }
 
     //行为信息
     @Override
-    public List<DrugActionEntity> getActionById(Long id){
-        Optional<List<DrugActionEntity>> actionEntities=drugActionRepository.getById(id);
-        if (!actionEntities.isPresent()){
-            throw new RuntimeException("No Data");
-        }
-        return actionEntities.get();
+    public DrugActionEntity getActionById(Long id){
+        Optional<DrugActionEntity> actionEntities=drugActionRepository.getById(id);
+        return actionEntities.orElse(null);
     }
 
     @Override
     public List<DrugActionEntity> getActionByDrugId(Long id){
-        Optional<List<DrugActionEntity>> actionEntities=drugActionRepository.getByDrugId(id);
-        if (!actionEntities.isPresent()){
-            throw new RuntimeException("No Data");
-        }
-        return actionEntities.get();
+        return drugActionRepository.getByDrugId(id);
     }
     @Override
     public List<DrugActionEntity> getActionByUserId(Long id){
-        Optional<List<DrugActionEntity>> actionEntities=drugActionRepository.getByUserId(id);
-        if (!actionEntities.isPresent()){
-            throw new RuntimeException("No Data");
-        }
-        return actionEntities.get();
+        return drugActionRepository.getByUserId(id);
     }
 
     @Override
-    public List<DrugActionEntity> getAllActions(){
-        List<DrugActionEntity> actionEntities=drugActionRepository.getAll();
-        return actionEntities;
+    public DrugActionEntity insertDrugAction(DrugActionEntity drugAction){
+        Optional<DrugEntity>drugOpt=drugRepository.getById(drugAction.getDrugId());
+        if (!drugOpt.isPresent()){
+            return null;
+        }
+        DrugEntity drugEntities=drugOpt.get();
+        BigDecimal quantity=drugEntities.getQuantity();
+        BigDecimal changeNum=drugAction.getChangeNum();
+        BigDecimal newNum=quantity.add(changeNum);
+        //判断是否够减少的
+        if (newNum.compareTo(new BigDecimal("0")) <0){
+            return null;
+        }
+
+        drugEntities.setQuantity(newNum);
+        updateDrug(drugEntities);
+
+        drugAction.setCreatedAt(TimeUtils.getNowTime());
+        drugAction.setUpdatedAt(TimeUtils.getNowTime());
+
+        return drugActionRepository.save(drugAction);
 
 
     }
+    @Override
+    public List<DrugActionEntity> getAllActions(){
+        return drugActionRepository.getAll();
+    }
+
 
 }

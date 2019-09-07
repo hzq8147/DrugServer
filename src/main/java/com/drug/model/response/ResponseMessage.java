@@ -1,5 +1,5 @@
-package com.drug.model.entity;
-
+package com.drug.model.response;
+import com.drug.enums.EnumCodes;
 public class ResponseMessage {
     /*
         是否成功
@@ -16,6 +16,12 @@ public class ResponseMessage {
     */
     private Object data;
 
+    public ResponseMessage(){
+        int code= EnumCodes.UNKNOWN_ERROR;
+        this.msg="";
+        this.data=null;
+
+    }
     public ResponseMessage(int code,String msg,Object data){
         this.code=code;
         this.msg=msg;
