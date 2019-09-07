@@ -1,6 +1,7 @@
 package com.drug.model.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -9,10 +10,13 @@ import java.util.Objects;
 @Table(name = "drug_action", schema = "drug", catalog = "")
 public class DrugActionEntity {
     private long id;
+    @NotNull(message = "drugId不能为空")
     private long drugId;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    @NotNull(message = "userId不能为空")
     private long userId;
+    @NotNull(message = "数值修改不能为空")
     private BigDecimal changeNum;
 
     @Id

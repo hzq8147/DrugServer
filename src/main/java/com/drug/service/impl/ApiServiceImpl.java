@@ -28,16 +28,13 @@ public class ApiServiceImpl implements ApiService {
     //药品信息
     @Override
     public List<DrugEntity> getDrugsByName(String name) {
-            Optional<List<DrugEntity>> drugEntities = drugRepository.getByNameStartingWith(name);
-            if (!drugEntities.isPresent()){
-                return null;
-             }
-            return drugEntities.get();
+            List<DrugEntity> drugEntities = drugRepository.getByNameStartingWith(name);
+            return drugEntities;
     }
 
     @Override
-    public List<DrugEntity> getDrugsById(Long id){
-        Optional<List<DrugEntity>> drugEntities=drugRepository.getById(id);
+    public DrugEntity getDrugById(Long id){
+        Optional<DrugEntity> drugEntities=drugRepository.getById(id);
         if (!drugEntities.isPresent()){
             return null;
         }
@@ -53,76 +50,89 @@ public class ApiServiceImpl implements ApiService {
     }
     @Override
     public DrugEntity updateDrug(DrugEntity drug){
-        DrugEntity drugRepo= drugRepository.findById(drug.getId()).get();
-        if (drugRepo==null){
+        Optional<DrugEntity>drugOpt= drugRepository.getById(drug.getId());
+        if (!drugOpt.isPresent()){
             return null;
         }
+        DrugEntity drugRepo=drugOpt.get();
         drugRepo.setUpdatedAt(TimeUtils.getNowTime());
-
-        drugRepo.setName(drug.getName());
-        drugRepo.setQuantity(drug.getQuantity());
-        drugRepo.setRid(drug.getRid());
-        drugRepo.setReserves(drug.getReserves());
-        drugRepo.setReservesUnit(drug.getReservesUnit());
-        drugRepo.setSecurityRisk(drug.getSecurityRisk());
-        drugRepo.setSecurityRiskRate(drug.getSecurityRiskRate());
-        drugRepo.setDanger(drug.getDanger());
-        drugRepo.setReservesMin(drug.getReservesMin());
-        drugRepo.setRemark(drug.getRemark());
-        drugRepo.setManagement(drug.getManagement());
-        drugRepo.setPlaceRoom(drug.getPlaceRoom());
+        if(drug.getName()!=null){
+            drugRepo.setName(drug.getName());
+        }
+        if(drug.getQuantity()!=null){
+            drugRepo.setQuantity(drug.getQuantity());
+        }
+        if (drug.getRid()!=null){
+            drugRepo.setRid(drug.getRid());
+        }
+        if (drug.getReserves()!=null){
+            drugRepo.setReserves(drug.getReserves());
+        }
+        if (drug.getReservesUnit()!=null){
+            drugRepo.setReservesUnit(drug.getReservesUnit());
+        }
+        if (drug.getSecurityRisk()!=null){
+            drugRepo.setSecurityRisk(drug.getSecurityRisk());
+        }
+        if (drug.getSecurityRiskRate()!=null){
+            drugRepo.setSecurityRiskRate(drug.getSecurityRiskRate());
+        }
+        if (drug.getDanger()!=null){
+            drugRepo.setDanger(drug.getDanger());
+        }
+        if (drug.getReservesMin()!=null){
+            drugRepo.setReservesMin(drug.getReservesMin());
+        }
+        if (drug.getRemark()!=null){
+            drugRepo.setRemark(drug.getRemark());
+        }
+        if (drug.getManagement()!=null){
+            drugRepo.setManagement(drug.getManagement());
+        }
+        if (drug.getPlaceRoom()>0){
+            drugRepo.setPlaceRoom(drug.getPlaceRoom());
+        }
         return drugRepository.save(drugRepo);
     }
     @Override
     public DrugEntity deleteDrug(Long id){
-        DrugEntity drugRepo= drugRepository.findById(id).get();
-        if (drugRepo==null){
+        Optional<DrugEntity> drugRepo= drugRepository.getById(id);
+        if (!drugRepo.isPresent()){
             return null;
         }
         drugRepository.deleteById(id);
-        return  drugRepo;
+        return  drugRepo.get();
     }
     //获取所有药品
     @Override
     public List<DrugEntity> getAllDrugs() {
-        List<DrugEntity> drugEntities = drugRepository.getAll();
-        return drugEntities;
+        return drugRepository.getAll();
     }
 
     //行为信息
     @Override
-    public List<DrugActionEntity> getActionById(Long id){
-        Optional<List<DrugActionEntity>> actionEntities=drugActionRepository.getById(id);
-        if (!actionEntities.isPresent()){
-            return null;
-        }
-        return actionEntities.get();
+    public DrugActionEntity getActionById(Long id){
+        Optional<DrugActionEntity> actionEntities=drugActionRepository.getById(id);
+        return actionEntities.orElse(null);
     }
 
     @Override
     public List<DrugActionEntity> getActionByDrugId(Long id){
-        Optional<List<DrugActionEntity>> actionEntities=drugActionRepository.getByDrugId(id);
-        if (!actionEntities.isPresent()){
-            return null;
-        }
-        return actionEntities.get();
+        return drugActionRepository.getByDrugId(id);
     }
     @Override
     public List<DrugActionEntity> getActionByUserId(Long id){
-        Optional<List<DrugActionEntity>> actionEntities=drugActionRepository.getByUserId(id);
-        if (!actionEntities.isPresent()){
-            return null;
-        }
-        return actionEntities.get();
+        return drugActionRepository.getByUserId(id);
     }
 
     @Override
     public DrugActionEntity insertDrugAction(DrugActionEntity drugAction){
-        Optional<List<DrugEntity>> drugEntities=drugRepository.getById(drugAction.getDrugId());
-        if (!drugEntities.isPresent()){
+        Optional<DrugEntity>drugOpt=drugRepository.getById(drugAction.getDrugId());
+        if (!drugOpt.isPresent()){
             return null;
         }
-        BigDecimal quantity=drugEntities.get().get(0).getQuantity();
+        DrugEntity drugEntities=drugOpt.get();
+        BigDecimal quantity=drugEntities.getQuantity();
         BigDecimal changeNum=drugAction.getChangeNum();
         BigDecimal newNum=quantity.add(changeNum);
         //判断是否够减少的
@@ -130,21 +140,19 @@ public class ApiServiceImpl implements ApiService {
             return null;
         }
 
-        drugEntities.get().get(0).setQuantity(newNum);
-        updateDrug(drugEntities.get().get(0));
+        drugEntities.setQuantity(newNum);
+        updateDrug(drugEntities);
 
         drugAction.setCreatedAt(TimeUtils.getNowTime());
         drugAction.setUpdatedAt(TimeUtils.getNowTime());
 
-        DrugActionEntity action=drugActionRepository.save(drugAction);
-        return action;
+        return drugActionRepository.save(drugAction);
 
 
     }
     @Override
     public List<DrugActionEntity> getAllActions(){
-        List<DrugActionEntity> actionEntities=drugActionRepository.getAll();
-        return actionEntities;
+        return drugActionRepository.getAll();
     }
 
 

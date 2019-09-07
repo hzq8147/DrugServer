@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface ApiService {
    //药品信息
    List<DrugEntity> getDrugsByName(String name);
-   List<DrugEntity> getDrugsById(Long id);
+   DrugEntity getDrugById(Long id);
 
    DrugEntity insertDrug(DrugEntity drug);
    DrugEntity updateDrug(DrugEntity drug);
@@ -18,7 +18,7 @@ public interface ApiService {
 
    List<DrugEntity> getAllDrugs();
    //行为信息
-   List<DrugActionEntity> getActionById(Long id);
+   DrugActionEntity getActionById(Long id);
    List<DrugActionEntity> getActionByUserId(Long id);
    List<DrugActionEntity> getActionByDrugId(Long id);
 

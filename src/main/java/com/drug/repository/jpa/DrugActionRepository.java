@@ -12,9 +12,9 @@ import java.util.Optional;
 @Repository
 public interface DrugActionRepository extends JpaRepository<DrugActionEntity, Long> {
     //行为信息查询
-    Optional<List<DrugActionEntity>> getById(Long id);
-    Optional<List<DrugActionEntity>> getByDrugId(Long id);
-    Optional<List<DrugActionEntity>> getByUserId(Long id);
+    Optional<DrugActionEntity> getById(Long id);
+    List<DrugActionEntity> getByDrugId(Long id);
+    List<DrugActionEntity> getByUserId(Long id);
     DrugActionEntity save(DrugActionEntity drugAction);
 
 

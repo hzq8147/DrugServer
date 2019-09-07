@@ -1,8 +1,11 @@
 package com.drug.model.request;
 
-public class DrugDeleteRequest  {
-    private Long id;
+import javax.validation.constraints.NotNull;
 
+public class DrugDeleteRequest  {
+
+    @NotNull(message = "id不能为空")
+    private Long id;
     public Long getId() {
         return id;
     }
