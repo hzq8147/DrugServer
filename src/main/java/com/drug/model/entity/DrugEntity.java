@@ -24,6 +24,8 @@ public class DrugEntity {
     @NotNull(message = "日常储量不能空")
     private BigDecimal reserves;
 
+    @NotNull(message = "存储教室不能为空")
+    private Long placeRoom;
     @NotNull(message = "存储单位不能为空")
     private String reservesUnit;
     @NotNull(message = "主要安全风险不能为空")
@@ -33,8 +35,6 @@ public class DrugEntity {
     private BigDecimal reservesMin;
     private String remark;
     private String management;
-    @NotNull(message = "存储教室不能为空")
-    private int placeRoom;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -179,11 +179,11 @@ public class DrugEntity {
 
     @Basic
     @Column(name = "place_room", nullable = false)
-    public int getPlaceRoom() {
+    public Long getPlaceRoom() {
         return placeRoom;
     }
 
-    public void setPlaceRoom(int placeRoom) {
+    public void setPlaceRoom(Long placeRoom) {
         this.placeRoom = placeRoom;
     }
 
