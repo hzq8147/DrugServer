@@ -3,6 +3,10 @@ server:
   error:
     whitelabel:
       enabled: false
+  ssl:
+    key-store: classpath:key.pfx
+    key-store-password: 85IWcijc
+    key-store-type: PKCS12
 
 spring:
   mvc:
